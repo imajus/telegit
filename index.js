@@ -1,1 +1,1 @@
-console.log('Hello, Node.js!');
+console.log('TeleGit - Entry point');
