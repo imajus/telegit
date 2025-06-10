@@ -1,0 +1,25 @@
+{
+  "name": "telegit",
+  "version": "1.0.0",
+  "description": "A minimalist AI-powered Telegram bot that turns simple chat messages into actionable GitHub issues. Using natural language processing (via LLM API), messages are automatically classified, categorized, and synced to GitHub Issues—streamlining idea capture and bug reporting from your team's chat, all with a quick feedback loop.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.28.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.1",
+    "prettier": "^3.5.3"
+  }
+}
