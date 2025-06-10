@@ -24,7 +24,7 @@ npm run lint:fix      # Auto-fix linting issues
 npm run format        # Format code with Prettier
 
 # Run the bot
-node index.js         # Start the application
+npm start            # Start the application
 ```
 
 ## Architecture Overview
@@ -44,18 +44,21 @@ The project follows a three-layer architecture:
 ### Expected Directory Structure
 
 Based on README references, the codebase will likely organize as:
-- `/src/backend/` - Bot logic and service handlers
-- `/src/llm/` - Prompt templates and LLM interaction logic
+
+- `/backend/` - Bot logic and service handlers
+- `/agents/` - Prompt templates and LLM interaction logic
 
 ## Environment Variables
 
 Required for runtime:
+
 - `TELEGRAM_BOT_TOKEN`
-- `OPENAI_API_KEY` 
+- `OPENAI_API_KEY`
 - `MCP_SERVER_HOST`
 - `GITHUB_REPOSITORY`
 
 Optional:
+
 - `ALLOWED_TELEGRAM_GROUPS`
 - `ALLOWED_TELEGRAM_USERS`
 

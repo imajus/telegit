@@ -1,22 +1,15 @@
-import { GitHubService } from '../services/githubService.js';
-
-export async function reactionHandler(ctx, config) {
+export async function reactionHandler(ctx) {
   const reaction = ctx.messageReaction;
   const userId = ctx.from.id;
-  
   // Only process reactions from the original message author
   if (reaction.user.id !== userId) {
     return;
   }
-
   const emoji = reaction.new_reaction?.[0]?.emoji;
-  
   if (!emoji) {
     return;
   }
-
   console.log(`👆 User ${userId} reacted with: ${emoji}`);
-
   try {
     switch (emoji) {
       case '👍':

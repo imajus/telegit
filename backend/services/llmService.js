@@ -1,55 +1,23 @@
-import OpenAI from 'openai';
+import { run } from '@openai/agents';
+import { teleGitAgent } from '../../agent/agent.js';
 
-export class LLMService {
-  constructor(config) {
-    this.openai = new OpenAI({
-      apiKey: config.openaiApiKey,
-    });
-  }
-
-  async classifyMessage(message) {
-    const prompt = `
-Analyze the following message and classify it as either a 'bug', 'task', or 'idea'.
-Also extract a suitable title and description for a GitHub issue.
-
-Message: "${message}"
-
-Respond with a JSON object in this format:
-{
-  "type": "bug|task|idea",
-  "title": "Brief descriptive title",
-  "description": "Detailed description for the issue",
-  "labels": ["relevant", "labels"]
-}
-
-Classification guidelines:
-- bug: Error reports, problems, something not working
-- task: Action items, improvements, things to do
-- idea: Feature requests, suggestions, brainstorming
-
-Keep the title concise (under 80 characters) and make the description clear and actionable.
-`;
-
-    try {
-      const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.3,
-        max_tokens: 500,
-      });
-
-      const content = response.choices[0].message.content;
-      return JSON.parse(content);
-    } catch (error) {
-      console.error('❌ LLM classification error:', error);
-      
-      // Fallback classification
-      return {
-        type: 'idea',
-        title: 'User Message',
-        description: message,
-        labels: ['user-input'],
-      };
-    }
-  }
+/**
+ * 
+ * @param {*} message 
+ * @param {number} message.messageId
+ * @param {number} message.fromId
+ * @param {number} message.chatId
+ * @param {string} message.chatType - One of: "private", "group", "supergroup", "channel"
+ * @param {string} message.text
+ * @returns 
+ */
+export async function processMessage(message) {
+  const result = await run(teleGitAgent, JSON.stringify(message));
+  const classifyResult = result.output.find(item => item.type === 'function_call_result' && item.name === 'classify_message');
+  return {
+    output: result.finalOutput,
+    classification: classifyResult
+      ? JSON.parse(classifyResult.output.text)
+      : null,
+  };
 }

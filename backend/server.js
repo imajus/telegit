@@ -1,8 +1,12 @@
 import dotenv from 'dotenv';
+import { setDefaultOpenAIKey } from '@openai/agents';
 import { TeleGitBot } from './bot/index.js';
 
 // Load environment variables first
 dotenv.config();
+
+// Initialize OpenAI agents globally
+setDefaultOpenAIKey(process.env.OPENAI_API_KEY);
 
 async function main() {
   console.log('🚀 Starting TeleGit backend...');
@@ -12,36 +16,25 @@ async function main() {
     'TELEGRAM_BOT_TOKEN',
     'OPENAI_API_KEY',
     'GITHUB_PERSONAL_ACCESS_TOKEN',
-    'GITHUB_REPOSITORY',
-    'MCP_SERVER_HOST'
+    'GITHUB_REPOSITORY_OWNER',
+    'GITHUB_REPOSITORY_NAME',
   ];
 
-  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
-  
+  const missingVars = requiredEnvVars.filter(
+    (varName) => !process.env[varName]
+  );
+
   if (missingVars.length > 0) {
     console.error('❌ Missing required environment variables:', missingVars);
     process.exit(1);
   }
 
   try {
-    // Extract environment variables
-    const config = {
-      telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
-      openaiApiKey: process.env.OPENAI_API_KEY,
-      githubToken: process.env.GITHUB_PERSONAL_ACCESS_TOKEN,
-      githubRepository: process.env.GITHUB_REPOSITORY,
-      mcpServerHost: process.env.MCP_SERVER_HOST,
-      allowedGroups: process.env.ALLOWED_TELEGRAM_GROUPS?.split(',').filter(Boolean) || [],
-      allowedUsers: process.env.ALLOWED_TELEGRAM_USERS?.split(',').filter(Boolean) || [],
-    };
-
-    const bot = new TeleGitBot(config);
+    const bot = new TeleGitBot(process.env.TELEGRAM_BOT_TOKEN);
     await bot.launch();
-
     // Graceful shutdown
     process.once('SIGINT', () => bot.stop('SIGINT'));
     process.once('SIGTERM', () => bot.stop('SIGTERM'));
-
   } catch (error) {
     console.error('❌ Failed to start TeleGit bot:', error);
     process.exit(1);

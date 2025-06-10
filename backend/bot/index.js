@@ -3,9 +3,8 @@ import { messageHandler } from '../handlers/messageHandler.js';
 import { reactionHandler } from '../handlers/reactionHandler.js';
 
 export class TeleGitBot {
-  constructor(config) {
-    this.config = config;
-    this.bot = new Telegraf(config.telegramBotToken);
+  constructor(telegramBotToken) {
+    this.bot = new Telegraf(telegramBotToken);
     this.setupHandlers();
   }
 
@@ -13,7 +12,7 @@ export class TeleGitBot {
     this.bot.start((ctx) => {
       ctx.reply(
         '🤖 Welcome to TeleGit! I help turn your messages into GitHub issues.\n\n' +
-          'Just send me your ideas, bugs, or tasks and I\'ll process them with AI magic! ✨'
+          "Just send me your ideas, bugs, or tasks and I'll process them with AI magic! ✨"
       );
     });
 
@@ -21,7 +20,7 @@ export class TeleGitBot {
       ctx.reply(
         '📋 How to use TeleGit:\n\n' +
           '1. Send any message with an idea, bug report, or task\n' +
-          '2. I\'ll analyze it and create a GitHub issue\n' +
+          "2. I'll analyze it and create a GitHub issue\n" +
           '3. React with 👍 to approve or 👎 to reject\n' +
           '4. Use 💩 to cancel and stop retrying\n\n' +
           'Status reactions:\n' +
@@ -32,8 +31,8 @@ export class TeleGitBot {
       );
     });
 
-    this.bot.on('text', (ctx) => messageHandler(ctx, this.config));
-    this.bot.on('message_reaction', (ctx) => reactionHandler(ctx, this.config));
+    this.bot.on('message', messageHandler);
+    this.bot.on('message_reaction', reactionHandler);
   }
 
   async launch() {

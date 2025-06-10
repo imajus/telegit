@@ -108,7 +108,7 @@ Also, you may want to set up these optional variables:
 Then start the backend:
 
 ```bash
-node server.js
+npm start
 ```
 
 ### 3. Invite the Bot to Telegram Group
@@ -129,8 +129,8 @@ Add the bot user to your desired Telegram group as admin (for message access and
 ## Development
 
 - All tokens are stored as environment variables—**never commit secrets.**
-- See `/src/backend` for bot and service source code.
-- See `/src/llm` for prompt templates and LLM logic.
+- See `/backend` for bot and service source code.
+- See `/agents` for prompt templates and LLM logic.
 
 ---
 
