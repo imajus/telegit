@@ -6,7 +6,12 @@ export async function getGitHubServer() {
   if (!instance) {
     const options = { name: 'GitHub Server' };
     if (process.env.NODE_ENV === 'production') {
-      options.fullCommand = 'github-mcp-server --toolsets issues stdio';
+      options.command = 'github-mcp-server';
+      options.args = ['stdio'];
+      options.env = {
+        'GITHUB_PERSONAL_ACCESS_TOKEN': process.env.GITHUB_ACCESS_TOKEN,
+        'GITHUB_TOOLSETS': 'issues',
+      };
     } else {
       options.command = 'docker';
       options.args = [
