@@ -1,6 +1,6 @@
 {
-  "watch": ["backend/**/*.js", "agent/**/*.js", ".env"],
-  "ext": "js,json",
+  "watch": ["backend/**/*.*", "agent/**/*.*", ".env"],
+  "ext": "hbs,js,json",
   "ignore": ["node_modules/**/*"],
   "delay": "2000",
   "env": {
