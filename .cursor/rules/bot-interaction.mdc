@@ -1,0 +1,49 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Bot Interaction Guide
+
+## Message Processing
+
+1. **Message Flow**
+   - User sends message in Telegram group
+   - Bot processes message through LLM API
+   - Bot creates/updates GitHub issue
+   - Bot adds reaction to original message
+
+2. **Reaction Meanings**
+   - 🤔: Processing
+   - 👾: Bug recorded
+   - 🫡: Task issued
+   - 🦄: Idea logged
+
+## Bot Capabilities
+
+1. **Issue Management**
+   - Create new issues from messages
+   - Update existing issues
+   - Close issues
+   - Query issue status
+
+2. **Media Handling**
+   - Attach images to issues (requires S3)
+   - Store message history (optional)
+
+3. **Intent Detection**
+   - Works with or without hashtags
+   - Uses LLM for natural language understanding
+   - Automatically categorizes messages
+
+## Best Practices
+
+1. **Message Format**
+   - Write clear, descriptive messages
+   - Include relevant details
+   - Use hashtags optionally for explicit categorization
+
+2. **Group Setup**
+   - Add bot as admin for full functionality
+   - Configure allowed groups/users if needed
+   - Ensure bot has message access permissions

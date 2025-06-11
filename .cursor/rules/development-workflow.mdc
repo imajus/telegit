@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Development Workflow
+
+## Available Scripts
+
+- `npm start` - Run in production mode
+- `npm run dev` - Run in development mode with hot reload
+- `npm run lint` - Run ESLint
+- `npm run lint:fix` - Fix ESLint issues
+- `npm run format` - Format code with Prettier
+
+## Development Guidelines
+
+1. **Environment Setup**
+   - Never commit secrets or tokens
+   - Use environment variables for all sensitive data
+   - Follow the environment variable structure in [project-overview.mdc](mdc:project-overview.mdc)
+
+2. **Code Organization**
+   - Keep bot handlers in `/backend/bot`
+   - Place message handlers in `/backend/handlers`
+   - Store service integrations in `/backend/services`
+   - Maintain LLM-related code in `/agent` directory
+
+3. **Testing**
+   - Test bot responses in development mode
+   - Verify GitHub issue creation/updates
+   - Check LLM intent detection accuracy
+   - Validate S3 integration if enabled
+
+4. **Docker Deployment**
+   - Build image: `docker build -t telegit:latest .`
+   - Run container with required environment variables
+   - See README.md for complete deployment instructions

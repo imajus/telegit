@@ -1,0 +1,44 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# TeleGit Project Overview
+
+TeleGit is a Telegram bot that bridges communication between Telegram chats and GitHub issues using AI-powered intent detection.
+
+## Core Components
+
+- **Backend**: Located in `/backend` directory
+  - `/bot` - Telegram bot handlers
+  - `/handlers` - Message and reaction handlers
+  - `/services` - External service integrations
+
+- **Agent**: Located in `/agent` directory
+  - `/agents/mcps` - MCP server definitions
+  - `/agents/templates` - LLM prompt templates
+  - `/agents/tools` - Custom LLM tools
+
+## Key Features
+
+- Chat-first workflow using Telegram
+- LLM-powered intent extraction
+- Automated GitHub sync via MCP server
+- User feedback via Telegram reactions
+- Optional AWS S3 integration for storage
+
+## Environment Variables
+
+Required:
+- `TELEGRAM_BOT_TOKEN`
+- `OPENAI_API_KEY`
+- `GITHUB_REPOSITORY_OWNER`
+- `GITHUB_REPOSITORY_NAME`
+
+Optional:
+- `ALLOWED_TELEGRAM_GROUPS`
+- `ALLOWED_TELEGRAM_USERS`
+- `S3_ACCESS_KEY_ID`
+- `S3_SECRET_ACCESS_KEY`
+- `S3_REGION`
+- `S3_BUCKET`
