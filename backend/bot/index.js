@@ -1,6 +1,22 @@
 import { Telegraf } from 'telegraf';
 import { messageHandler } from '../handlers/messageHandler.js';
-import { reactionHandler } from '../handlers/reactionHandler.js';
+
+function checkAllowedSender(ctx, next) {
+  const allowedGroups = process.env.ALLOWED_TELEGRAM_GROUPS?.split(',').map(id => id.trim()) || [];
+  const allowedUsers = process.env.ALLOWED_TELEGRAM_USERS?.split(',').map(id => id.trim()) || [];
+  const chatId = ctx.chat.id.toString();
+  const userId = ctx.from.id.toString();
+  const isGroupChat = ['group', 'supergroup'].includes(ctx.chat.type);
+  if (isGroupChat && allowedGroups.length > 0 && !allowedGroups.includes(chatId)) {
+    console.log(`❌ Message from unauthorized group ${chatId}`);
+    return;
+  }
+  if (allowedUsers.length > 0 && !allowedUsers.includes(userId)) {
+    console.log(`❌ Message from unauthorized user ${userId}`);
+    return;
+  }
+  return next();
+}
 
 export class TeleGitBot {
   constructor(telegramBotToken) {
@@ -33,8 +49,8 @@ export class TeleGitBot {
       );
     });
 
+    this.bot.use(checkAllowedSender);
     this.bot.on('message', messageHandler);
-    this.bot.on('message_reaction', reactionHandler);
   }
 
   async launch() {
