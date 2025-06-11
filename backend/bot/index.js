@@ -19,15 +19,17 @@ export class TeleGitBot {
     this.bot.help((ctx) => {
       ctx.reply(
         '📋 How to use TeleGit:\n\n' +
-          '1. Send any message with an idea, bug report, or task\n' +
-          "2. I'll analyze it and create a GitHub issue\n" +
-          '3. React with 👍 to approve or 👎 to reject\n' +
-          '4. Use 💩 to cancel and stop retrying\n\n' +
+          "1. Send any message with an idea, bug report, or task. I'll analyze it and create a GitHub issue.\n" +
+          "2. I can update existing GitHub issues. Reply to a message used to create the issue and request changes.\n" +
+          "3. You may reply to the message used to create the issue and ask for its status.\n" +
+          "4. Generic analytics: query for how many open issues there are, how many are assigned to you, etc.\n\n" +
           'Status reactions:\n' +
           '🤔 Processing...\n' +
           '👾 Bug recorded\n' +
-          '🫡 Task updated\n' +
-          '🦄 Idea logged'
+          '🫡 Task issued\n' +
+          '🦄 Idea logged\n' +
+          '👌 No action needed\n' +
+          '😭 Something went wrong...'
       );
     });
 

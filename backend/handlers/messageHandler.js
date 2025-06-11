@@ -19,20 +19,32 @@ export async function messageHandler(ctx) {
       chatId: message.chat.id,
       chatType: message.chat.type,
       text: message.text,
+      ...(message.reply_to_message && {
+        replyToMessageId: message.reply_to_message.message_id,
+        replyToMessageFromId: message.reply_to_message.from.id,
+        replyToMessageText: message.reply_to_message.text,
+      }),
     });
-    console.log(`🏷️ Result:`, result);
+    // console.log(`🏷️  Agent result:`, result);
     // Submit a reaction
-    if (result.classification) {
-      const emoji = getReactionEmoji(result.classification.type);
-      if (emoji) {
-        await ctx.react(emoji);
+    if (result.success) {
+      console.error('✅ Successfully processed message:', result.message);
+      if (result.modified) {
+        if (result.classification.action === 'create') {
+          const emoji = getReactionEmoji(result.classification.type);
+          await ctx.react(emoji);
+        } else {
+          await ctx.react('👌');
+        }
       } else {
-        // Fallback to a neutral emoji
-        await ctx.react('😴');
+        await ctx.react('');
+      }
+      if (result.response) {
+        await ctx.reply(result.response);
       }
     } else {
-      // Remove previously added reaction
-      await ctx.react('');
+      console.error('❌ Error processing message:', result.message);
+      await ctx.react('😭');
     }
   } catch (error) {
     console.error('❌ Error processing message:', error);
@@ -55,6 +67,7 @@ function getReactionEmoji(type) {
     case 'idea':
       return '🦄';
     default:
-      return null
+      // Fallback to a neutral emoji
+      return '👌';
   }
 }

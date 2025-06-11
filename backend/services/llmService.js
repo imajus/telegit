@@ -1,6 +1,19 @@
 import { run } from '@openai/agents';
 import { getTeleGitAgent } from '../../agent/agent.js';
 
+/** 
+ * @typedef {object} ProcessMessageResult
+ * @prop {boolean} success
+ * @prop {boolean} modified
+ * @prop {object} classification
+ * @prop {string} classification.type
+ * @prop {string} classification.title
+ * @prop {string} classification.description
+ * @prop {string[]} classification.labels
+ * @prop {string} message
+ * @prop {string} [response]
+ */
+
 /**
  * 
  * @param {*} message 
@@ -13,11 +26,9 @@ import { getTeleGitAgent } from '../../agent/agent.js';
  */
 export async function processMessage(message) {
   const result = await run(await getTeleGitAgent(), JSON.stringify(message));
-  const classifyResult = result.output.find(item => item.type === 'function_call_result' && item.name === 'classify_message');
+  const classification = result.output.find(item => item.type === 'function_call_result' && item.name === 'classify_message');
   return {
-    output: result.finalOutput,
-    classification: classifyResult
-      ? JSON.parse(classifyResult.output.text)
-      : null,
+    ...result.finalOutput,
+    classification: classification ? JSON.parse(classification.output.text) : null,
   };
 }

@@ -18,8 +18,11 @@ You will be given a JSON containing all message details according to the followi
   "messageId": "number",
   "fromId": "number",
   "chatId": "number",
-  "chatType": "string", // "private", "group", "supergroup", "channel"
+  "chatType": "string", // One of: "private", "group", "supergroup", "channel"
   "text": "string",
+  "replyToMessageId": "number", // Optional
+  "replyToMessageFromId": "number", // Optional
+  "replyToMessageText": "string", // Optional
 }
 
 Classification guidelines:
@@ -30,13 +33,16 @@ Classification guidelines:
 
 For each message:
 1. Use the classify_message tool to build a structure:
-  - GitHub issues action (create/update/delete)
+  - GitHub issues action (query/create/update/delete)
   - For create/update actions only:
     - Category (bug/task/idea/other)
     - Concise title (under 80 characters)
     - Clear, actionable description
-    - Relevant labels
-1. Call the GitHub Server tools to perform the desired action with the GitHub issues: create/update
+    - Relevant labels, one or many of: "bug", "documentation", "enhancement", "good first issue", "help wanted", "invalid", "question", "wontfix" 
+1. Call the GitHub Server tools for:
+  - Searching current issues to prevent duplicates
+  - Performing the desired action: create/update
+  - If delete is requested, call update_issue with state argument set to "closed"
 
 For the GitHub Server tool calls, use the following data:
 
@@ -44,10 +50,15 @@ For the GitHub Server tool calls, use the following data:
 - Repository name: ${process.env.GITHUB_REPOSITORY_NAME}
 
 Respond with a status flag and a short summary of performed actions or error details.
+If no action has to be taken, consider this as success but set "modified" to false.
+
+If user has requested a response, include it in the "response" field.
       `.trim(),
       outputType: z.object({
         success: z.boolean(),
+        modified: z.boolean(),
         message: z.string(),
+        response: z.string().nullable(),
       }),
       tools: [classifyTool],
       mcpServers: [await getGitHubServer()],
