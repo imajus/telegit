@@ -6,7 +6,7 @@ export const classifyTool = tool({
   description: 'Classify a message and format it for GitHub issue creation',
   parameters: z.object({
     action: z
-      .enum(['query', 'create', 'update', 'delete'])
+      .enum(['query', 'create', 'update', 'close'])
       .describe('The action to perform on the GitHub issue'),
     type: z
       .enum(['bug', 'task', 'idea', 'other'])

@@ -31,6 +31,8 @@
     "dotenv": "^16.5.0",
     "openai": "^5.2.0",
     "telegraf": "^4.16.3",
-    "zod": "^3.25.57"
+    "zod": "^3.25.57",
+    "@aws-sdk/client-s3": "^3.0.0",
+    "@aws-sdk/s3-request-presigner": "^3.0.0"
   }
 }
