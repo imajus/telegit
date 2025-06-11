@@ -2,6 +2,7 @@ import { Agent } from '@openai/agents';
 import { z } from 'zod';
 import { classifyTool } from './tools/classify.js';
 import { getGitHubServer } from './mcps/github.js';
+import { getTelegramServer } from './mcps/telegram.js';
 import Handlebars from 'handlebars';
 import { readFile } from 'fs/promises';
 import { fileURLToPath } from 'url';
@@ -30,7 +31,7 @@ export async function getTeleGitAgent() {
         message: z.string(),
       }),
       tools: [classifyTool],
-      mcpServers: [await getGitHubServer()],
+      mcpServers: [await getGitHubServer(), await getTelegramServer()],
     });
   }
   return instance;

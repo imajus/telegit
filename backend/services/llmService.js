@@ -26,9 +26,10 @@ import { getTeleGitAgent } from '../../agent/agent.js';
  */
 export async function processMessage(message) {
   const result = await run(await getTeleGitAgent(), JSON.stringify(message));
-  const classification = result.output.find(item => item.type === 'function_call_result' && item.name === 'classify_message');
-  return {
-    ...result.finalOutput,
-    classification: classification ? JSON.parse(classification.output.text) : null,
-  };
+  return result.finalOutput;
+  // const classification = result.output.find(item => item.type === 'function_call_result' && item.name === 'classify_message');
+  // return {
+  //   ...result.finalOutput,
+  //   classification: classification ? JSON.parse(classification.output.text) : null,
+  // };
 }

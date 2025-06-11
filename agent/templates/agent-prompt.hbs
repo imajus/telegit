@@ -54,6 +54,6 @@ For the GitHub Server tool calls, use the following data when needed:
 - Repository owner: {{githubRepositoryOwner}}
 - Repository name: {{githubRepositoryName}}
 
-Respond with a status in "success" field.
-If no action has to be taken, consider this as success but set "modified" to false.
-Include response to the user in the "message" field. Be concise and to the point.
+Respond to user using Telegram Bot Server tool send-message:
+- Be sure to pass chatId from the message details
+- Use Telegram-compatible markdown formatting

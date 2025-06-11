@@ -30,7 +30,7 @@ TeleGit is a Telegram bot that bridges communication between Telegram chats and 
 ## Environment Variables
 
 Required:
-- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_BOT_API_TOKEN`
 - `OPENAI_API_KEY`
 - `GITHUB_REPOSITORY_OWNER`
 - `GITHUB_REPOSITORY_NAME`

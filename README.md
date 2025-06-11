@@ -73,7 +73,7 @@ flowchart TD
 
 Set these environment variables:
 
-- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_BOT_API_TOKEN`
 - `OPENAI_API_KEY`
 - `GITHUB_REPOSITORY_OWNER` (e.g., `username`)
 - `GITHUB_REPOSITORY_NAME` (e.g., `repo`)
@@ -132,7 +132,7 @@ docker build -t telegit:latest .
 ```bash
 docker run \
   --name telegit \
-  -e TELEGRAM_BOT_TOKEN=your_telegram_token \
+  -e TELEGRAM_BOT_API_TOKEN=your_telegram_token \
   -e OPENAI_API_KEY=your_openai_key \
   -e GITHUB_REPOSITORY_OWNER=username \
   -e GITHUB_REPOSITORY_NAME=yourrepo \

@@ -10,7 +10,7 @@ async function main() {
 
   // Validate environment variables
   const requiredEnvVars = [
-    'TELEGRAM_BOT_TOKEN',
+    'TELEGRAM_BOT_API_TOKEN',
     'OPENAI_API_KEY',
     'GITHUB_ACCESS_TOKEN',
     'GITHUB_REPOSITORY_OWNER',
@@ -30,7 +30,7 @@ async function main() {
   setDefaultOpenAIKey(process.env.OPENAI_API_KEY);
 
   try {
-    const bot = new TeleGitBot(process.env.TELEGRAM_BOT_TOKEN);
+    const bot = new TeleGitBot(process.env.TELEGRAM_BOT_API_TOKEN);
     await bot.launch();
     // Graceful shutdown
     process.once('SIGINT', () => bot.stop('SIGINT'));

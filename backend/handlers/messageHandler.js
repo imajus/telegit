@@ -20,7 +20,7 @@ export async function messageHandler(ctx) {
       // Get the highest quality photo (last in the array)
       const photo = message.photo[message.photo.length - 1];
       const file = await ctx.telegram.getFile(photo.file_id);
-      const fileUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`;
+      const fileUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_API_TOKEN}/${file.file_path}`;
       const s3Url = await uploadTelegramPhotoToS3(fileUrl);
       photoUrls.push(s3Url);
     }
@@ -39,24 +39,25 @@ export async function messageHandler(ctx) {
         replyToMessageText: message.reply_to_message.text,
       }),
     });
+    console.error('🤖 Agent response:', result);
     // Submit a reaction
-    if (result.success) {
-      console.error('✅ Successfully processed message:', result.message);
-      if (result.modified) {
-        if (result.classification?.action === 'create') {
-          const emoji = getReactionEmoji(result.classification.type);
-          await ctx.react(emoji);
-        } else {
-          await ctx.react('👌');
-        }
-      } else {
-        await ctx.react('');
-      }
-      await ctx.reply(result.message);
-    } else {
-      console.error('❌ Error processing message:', result.message);
-      await ctx.react('😭');
-    }
+    // if (result.success) {
+    //   console.error('✅ Successfully processed message:', result.message);
+    //   if (result.modified) {
+    //     if (result.classification?.action === 'create') {
+    //       const emoji = getReactionEmoji(result.classification.type);
+    //       await ctx.react(emoji);
+    //     } else {
+    //       await ctx.react('👌');
+    //     }
+    //   } else {
+    //     await ctx.react('');
+    //   }
+    //   await ctx.reply(result.message);
+    // } else {
+    //   console.error('❌ Error processing message:', result.message);
+    //   await ctx.react('😭');
+    // }
   } catch (error) {
     console.error('❌ Error processing message:', error);
     await ctx.react('😭');
