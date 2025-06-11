@@ -4,10 +4,12 @@ let instance = null;
 
 export async function getGitHubServer() {
   if (!instance) {
-    instance = new MCPServerStdio({
-      name: 'GitHub Server',
-      command: 'docker',
-      args: [
+    const options = { name: 'GitHub Server' };
+    if (process.env.NODE_ENV === 'production') {
+      options.fullCommand = 'github-mcp-server --toolsets issues stdio';
+    } else {
+      options.command = 'docker';
+      options.args = [
         'run',
         '-i',
         '--rm',
@@ -16,8 +18,9 @@ export async function getGitHubServer() {
         '-e',
         'GITHUB_TOOLSETS=issues',
         'ghcr.io/github/github-mcp-server',
-      ],
-    });
+      ];
+    }
+    instance = new MCPServerStdio(options);
     await instance.connect();
   }
   return instance;
