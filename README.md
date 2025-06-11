@@ -64,7 +64,7 @@ flowchart TD
 
 ```bash
 docker run -i --rm \
-  -e GITHUB_PERSONAL_ACCESS_TOKEN=your_github_token \
+  -e GITHUB_ACCESS_TOKEN=your_github_token \
   ghcr.io/github/github-mcp-server
 ```
 
@@ -80,11 +80,11 @@ Or configure in `mcp.json`:
         "-i",
         "--rm",
         "-e",
-        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "GITHUB_ACCESS_TOKEN",
         "ghcr.io/github/github-mcp-server"
       ],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "<YOUR_TOKEN>"
+        "GITHUB_ACCESS_TOKEN": "<YOUR_TOKEN>"
       }
     }
   }

@@ -5,8 +5,11 @@ export const classifyTool = tool({
   name: 'classify_message',
   description: 'Classify a message and format it for GitHub issue creation',
   parameters: z.object({
+    action: z
+      .enum(['create', 'update', 'delete'])
+      .describe('The action to perform on the GitHub issue'),
     type: z
-      .enum(['bug', 'task', 'idea'])
+      .enum(['bug', 'task', 'idea', 'other'])
       .describe('The category of the message'),
     title: z
       .string()
@@ -19,6 +22,7 @@ export const classifyTool = tool({
   }),
   execute: async (input) => {
     return {
+      action: input.action,
       type: input.type,
       title: input.title,
       description: input.description,

@@ -23,10 +23,16 @@ export async function messageHandler(ctx) {
     console.log(`🏷️ Result:`, result);
     // Submit a reaction
     if (result.classification) {
-      const emoji = getReactionEmoji(result.classification);
+      const emoji = getReactionEmoji(result.classification.type);
       if (emoji) {
-        ctx.react();
+        await ctx.react(emoji);
+      } else {
+        // Fallback to a neutral emoji
+        await ctx.react('😴');
       }
+    } else {
+      // Remove previously added reaction
+      await ctx.react('');
     }
   } catch (error) {
     console.error('❌ Error processing message:', error);

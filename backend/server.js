@@ -5,9 +5,6 @@ import { TeleGitBot } from './bot/index.js';
 // Load environment variables first
 dotenv.config();
 
-// Initialize OpenAI agents globally
-setDefaultOpenAIKey(process.env.OPENAI_API_KEY);
-
 async function main() {
   console.log('🚀 Starting TeleGit backend...');
 
@@ -15,7 +12,7 @@ async function main() {
   const requiredEnvVars = [
     'TELEGRAM_BOT_TOKEN',
     'OPENAI_API_KEY',
-    'GITHUB_PERSONAL_ACCESS_TOKEN',
+    'GITHUB_ACCESS_TOKEN',
     'GITHUB_REPOSITORY_OWNER',
     'GITHUB_REPOSITORY_NAME',
   ];
@@ -28,6 +25,9 @@ async function main() {
     console.error('❌ Missing required environment variables:', missingVars);
     process.exit(1);
   }
+
+  // Initialize OpenAI agents globally
+  setDefaultOpenAIKey(process.env.OPENAI_API_KEY);
 
   try {
     const bot = new TeleGitBot(process.env.TELEGRAM_BOT_TOKEN);
