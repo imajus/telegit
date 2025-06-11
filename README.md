@@ -10,6 +10,7 @@ A minimalist AI-powered Telegram bot that turns simple chat messages into action
 - **LLM-powered intent extraction:** Any message (with or without hashtags) is analyzed to determine intent and category.
 - **Automated GitHub sync:** Manages GitHub issues in your configured repository using GitHub MCP server.
 - **User feedback loop:** User approves or rejects AI agent actions via Telegram message reactions; issues are submitted accordingly.
+- **AWS S3 Integration:** Optional storage for message history and attachments.
 
 ---
 
@@ -22,13 +23,17 @@ A minimalist AI-powered Telegram bot that turns simple chat messages into action
 1. Bot indicates the status of his action as a reaction on your message:
    - 🤔: Processing
    - 👾: Bug recorded
-   - 🫡: Task updated
+   - 🫡: Task issued
    - 🦄: Idea logged
-1. User approves or rejects with a simple reaction:
-   - 👍: Message is auto-deleted, issue remains on GitHub.
-   - 👎: GitHub issue is deleted, and the Bot restarts and try to do it better this time.
-   - 💩: Cancel the action and stop Bot from retrying
 1. Hashtags are complimentary: LLM handles intent detection from free-form text.
+
+### Extra capabilities
+
+TeleGit also can:
+
+- Query existing GitHub issues
+- Update or close existing issues
+- Attach images from the message to the issue description (only if S3 integration is active)
 
 ---
 
@@ -42,11 +47,13 @@ flowchart TD
   B --> C[LLM API<br/>intent extraction]
   B --> D[MCP Server]
   D --> E[GitHub Issues]
+  B --> F[AWS S3<br/>Storage]
   B <-->|Feedback via reactions| A
 ```
 
 - **LLM API:** Handles all messaging/NLP/categorization
 - **MCP Server:** Handles all communication with GitHub Issues
+- **AWS S3:** Optional storage for message history and attachments
 
 ---
 
@@ -54,83 +61,95 @@ flowchart TD
 
 ### Prerequisites
 
+- Node.js >= 22.0.0
 - Docker (for running MCP server)
 - GitHub Repository
-- GitHub Personal Access Token (with issues/repo permission)
+- GitHub Personal Access Token (with issues/pr permissions)
 - OpenAI API Key (or your LLM API provider)
 - Telegram Bot Token
+- AWS S3 Bucket (optional)
 
-### 1. Deploy the MCP Server
-
-```bash
-docker run -i --rm \
-  -e GITHUB_ACCESS_TOKEN=your_github_token \
-  ghcr.io/github/github-mcp-server
-```
-
-Or configure in `mcp.json`:
-
-```json
-{
-  "servers": {
-    "github": {
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "-e",
-        "GITHUB_ACCESS_TOKEN",
-        "ghcr.io/github/github-mcp-server"
-      ],
-      "env": {
-        "GITHUB_ACCESS_TOKEN": "<YOUR_TOKEN>"
-      }
-    }
-  }
-}
-```
-
-### 2. Configure and Run the Bot Backend
+### 1. Configure and Run the Bot Backend
 
 Set these environment variables:
 
 - `TELEGRAM_BOT_TOKEN`
 - `OPENAI_API_KEY`
-- `MCP_SERVER_HOST` (e.g., `localhost:port`)
-- `GITHUB_REPOSITORY` (e.g., `yourorg/yourrepo`)
+- `GITHUB_REPOSITORY_OWNER` (e.g., `username`)
+- `GITHUB_REPOSITORY_NAME` (e.g., `repo`)
 
-Also, you may want to set up these optional variables:
+Optional environment variables:
 
 - `ALLOWED_TELEGRAM_GROUPS` - Comma separated Telegram group IDs
 - `ALLOWED_TELEGRAM_USERS` - Comma separated Telegram user IDs
+- `S3_ACCESS_KEY_ID` - For S3 integration
+- `S3_SECRET_ACCESS_KEY` - For S3 integration
+- `S3_REGION` - For S3 integration
+- `S3_BUCKET` - For S3 integration
 
 Then start the backend:
 
 ```bash
-npm start
+# Development mode with hot reload
+npm run dev
 ```
 
-### 3. Invite the Bot to Telegram Group
+### 2. Communicate With Telegram Bot
 
-Add the bot user to your desired Telegram group as admin (for message access and reaction monitoring).
-
----
-
-## Usage
-
-- Just chat as normal (ideas, tasks, bugs).
-- Optionally use hashtags; the LLM will infer labels/intent if not present.
-- Approve or reject with reactions.
-- Stay focused—no context switching, no forms.
+Add the bot user to your desired Telegram group as admin (for message access and reaction monitoring) or message it directly.
 
 ---
 
 ## Development
 
 - All tokens are stored as environment variables—**never commit secrets.**
-- See `/backend` for bot and service source code.
-- See `/agents` for prompt templates and LLM logic.
+- Project structure:
+  - `/backend` - Bot server and core logic
+    - `/bot` - Telegram bot handlers
+    - `/handlers` - Message and reaction handlers
+    - `/services` - External service integrations
+  - `/agent` - LLM logic
+    - `/agents/mcps` - MCP server definitions
+    - `/agents/templates` - LLM prompt templates
+    - `/agents/tools` - Custom LLM tools
+- Available scripts:
+  - `npm start` - Run in production mode
+  - `npm run dev` - Run in development mode with hot reload
+  - `npm run lint` - Run ESLint
+  - `npm run lint:fix` - Fix ESLint issues
+  - `npm run format` - Format code with Prettier
+
+## Docker Deployment
+
+1. Build the Docker image:
+
+```bash
+docker build -t telegit:latest .
+```
+
+2. Run the container with required environment variables:
+
+```bash
+docker run \
+  --name telegit \
+  -e TELEGRAM_BOT_TOKEN=your_telegram_token \
+  -e OPENAI_API_KEY=your_openai_key \
+  -e GITHUB_REPOSITORY_OWNER=username \
+  -e GITHUB_REPOSITORY_NAME=yourrepo \
+  -e GITHUB_ACCESS_TOKEN=your_github_token \
+  -e S3_ACCESS_KEY_ID=your_s3_key \
+  -e S3_SECRET_ACCESS_KEY=your_s3_secret \
+  -e S3_REGION=your_s3_region \
+  -e S3_BUCKET=your_s3_bucket \
+  telegit:latest
+```
+
+Optional environment variables:
+
+```bash
+  -e ALLOWED_TELEGRAM_GROUPS=group1,group2 \
+  -e ALLOWED_TELEGRAM_USERS=user1,user2 \
+```
 
 ---
 
@@ -141,6 +160,7 @@ Add the bot user to your desired Telegram group as admin (for message access and
 - [ ] Advanced feedback and auto-summarization
 - [ ] User/role-specific filtering and notifications
 - [ ] Daily/weekly/monthly performance analytics report
+- [ ] Enhanced S3 integration with various file attachment types
 
 ---
 
