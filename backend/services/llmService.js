@@ -1,5 +1,5 @@
 import { run } from '@openai/agents';
-import { getTeleGitAgent } from '../../agent/agent.js';
+import { getProcessorAgent } from '../../agent/agent.js';
 
 /** 
  * @typedef {object} ProcessMessageResult
@@ -25,7 +25,7 @@ import { getTeleGitAgent } from '../../agent/agent.js';
  * @returns 
  */
 export async function processMessage(message) {
-  const result = await run(await getTeleGitAgent(), JSON.stringify(message));
+  const result = await run(await getProcessorAgent(), JSON.stringify(message));
   return result.finalOutput;
   // const classification = result.output.find(item => item.type === 'function_call_result' && item.name === 'classify_message');
   // return {

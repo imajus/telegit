@@ -15,13 +15,6 @@ You will be given a JSON containing all message details according to the followi
   "replyToMessageText": "string", // Optional
 }
 
-Classification guidelines:
-
-- bug: Error reports, problems, something not working
-- task: Action items, improvements, things to do
-- idea: Feature requests, suggestions, brainstorming
-- other: Anything else
-
 For each message:
 
 1. Use the classify_message tool to build a structure:
@@ -31,8 +24,6 @@ For each message:
     - Include "repo:{{githubRepositoryOwner}}/{{githubRepositoryName}}" modifier in the search query
     - If you need to include only open issues, add "is:open" modifier
     - If you need to include only closed issues, add "is:closed" modifier
-    - Include link to the GitHib issue/s in the response message
-    - For each issue in the response, include "#issueXXX" hash tag where "XXX" is the issue number
   - For create/update actions only:
     - Select category (bug/task/idea/other)
     - Make concise title (under 80 characters)
@@ -41,19 +32,26 @@ For each message:
     - If photoUrls array is present, include the images in the issue body using markdown image syntax: ![description](url)
       - Place images after the main description text
       - Add an "Screenshots" section if there are multiple images
-    - Include link to the GitHib issue in the response message
-    - Include "#issueXXX" hash tag in the response message where "XXX" is the issue number
 1. Call the GitHub Server tools for:
   - Searching current issues to prevent duplicates
     - Include "repo:{{githubRepositoryOwner}}/{{githubRepositoryName}}" modifier in the search query
   - Performing the desired action: create/update
   - If close action is requested, call update_issue tool with the state argument set to "closed"
 
+Classification guidelines:
+
+- bug: Error reports, problems, something not working
+- task: Action items, improvements, things to do
+- idea: Feature requests, suggestions, brainstorming
+- other: Anything else
+
 For the GitHub Server tool calls, use the following data when needed:
 
 - Repository owner: {{githubRepositoryOwner}}
 - Repository name: {{githubRepositoryName}}
 
-Respond to user using Telegram Bot Server tool send-message:
-- Be sure to pass chatId from the message details
-- Use Telegram-compatible markdown formatting
+Pass action details to the Telegram Responder handoff for futher processing:
+
+- Keep it short and concise, don't include any unnecessary details
+- Include link to the GitHib issue/s
+- Include "#issueXXX" hash tag/s in the response message where "XXX" is the issue number
