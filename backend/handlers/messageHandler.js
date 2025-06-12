@@ -12,7 +12,7 @@ export async function messageHandler(ctx) {
     `📨 Message from user ${userId}: ${message.text || message.caption || '[No Text]'}`
   );
   try {
-    await ctx.react('🤔');
+    await ctx.react('👀');
     //TODO: Upload photo only when necessary via custom tool
     let photoUrls = [];
     if (message.photo) {
@@ -24,18 +24,19 @@ export async function messageHandler(ctx) {
       photoUrls.push(s3Url);
     }
     // Process the message using LLM
-    const result = await processMessage({
+    const result = await processMessage(message.text || message.caption || '', {
       messageId: message.message_id,
       fromId: message.from.id,
       chatId: message.chat.id,
       chatType: message.chat.type,
-      text: message.text || message.caption || '',
       photoUrls,
-      ...(message.reply_to_message && {
-        replyToMessageId: message.reply_to_message.message_id,
-        replyToMessageFromId: message.reply_to_message.from.id,
-        replyToMessageText: message.reply_to_message.text,
-      }),
+      replyTo: message.reply_to_message
+        ? {
+            messageId: message.reply_to_message.message_id,
+            fromId: message.reply_to_message.from.id,
+            text: message.reply_to_message.text,
+          }
+        : undefined,
     });
     console.log('🤖 Agent response:', result);
   } catch (error) {

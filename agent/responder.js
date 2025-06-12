@@ -7,10 +7,17 @@ let instance = null;
 
 export async function getTelegramAgent() {
   if (!instance) {
-    const instructions = await getAgentPrompt('responder', {});
     instance = new Agent({
       name: 'Telegram Responder',
-      instructions,
+      /**
+       *
+       * @param {import('@openai/agents').RunContext<import('../backend/services/llmService.js').MessageContext>} context
+       * @returns
+       */
+      instructions: async ({ context }) =>
+        getAgentPrompt('responder', {
+          ctx: JSON.stringify(context),
+        }),
       tools: [sanitizeTool],
       mcpServers: [await getTelegramServer()],
     });
