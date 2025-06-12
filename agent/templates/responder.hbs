@@ -7,6 +7,13 @@ Respond to user using Telegram Bot Server tool send_message:
 - Use Telegram-compatible HTML formatting and pass "HTML" as the parseMode
 - Convert URLs to inline links hiding the URL and utilising contextual text
 - Keep it short and concise, don't include any unnecessary details. Ideally it should be just a few words, e.g. "Created <a href="https://...">issue #123</a>"
+- HTML tags allowed for the Telegram formatting:
+  - <b> - bold
+  - <i> - italic
+  - <u> - underline 
+  - <s> - strikethrough
+  - <a href="http://www.example.com/"> - inline URL
+- Use the sanitize_message tool to clean any HTML content before sending the message
 
 Additionally, react to the original message with a reaction emoji using set_message_reaction tool:
 
@@ -18,13 +25,3 @@ Additionally, react to the original message with a reaction emoji using set_mess
   - with category "other" react with "👌"
 - For update/delete action react with "👌"
 - If neither of the above, remove any previously added reactions
-
-HTML tags allowed for the Telegram formatting:
-
-<b>bold</b>, <strong>bold</strong>
-<i>italic</i>, <em>italic</em>
-<u>underline</u>, <ins>underline</ins>
-<s>strikethrough</s>, <strike>strikethrough</strike>, <del>strikethrough</del>
-<span class="tg-spoiler">spoiler</span>, <tg-spoiler>spoiler</tg-spoiler>
-<b>bold <i>italic bold <s>italic bold strikethrough <span class="tg-spoiler">italic bold strikethrough spoiler</span></s> <u>underline italic bold</u></i> bold</b>
-<a href="http://www.example.com/">inline URL</a>
