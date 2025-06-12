@@ -1,13 +1,28 @@
 import { Telegraf } from 'telegraf';
 import { messageHandler } from '../handlers/messageHandler.js';
 
+function skipBotMessages(ctx, next) {
+  if (ctx.from?.is_bot) {
+    console.log('🤖 Skipping message from bot');
+    return;
+  }
+  return next();
+}
+
 function checkAllowedSender(ctx, next) {
-  const allowedGroups = process.env.ALLOWED_TELEGRAM_GROUPS?.split(',').map(id => id.trim()) || [];
-  const allowedUsers = process.env.ALLOWED_TELEGRAM_USERS?.split(',').map(id => id.trim()) || [];
+  const allowedGroups =
+    process.env.ALLOWED_TELEGRAM_GROUPS?.split(',').map((id) => id.trim()) ||
+    [];
+  const allowedUsers =
+    process.env.ALLOWED_TELEGRAM_USERS?.split(',').map((id) => id.trim()) || [];
   const chatId = ctx.chat.id.toString();
   const userId = ctx.from.id.toString();
   const isGroupChat = ['group', 'supergroup'].includes(ctx.chat.type);
-  if (isGroupChat && allowedGroups.length > 0 && !allowedGroups.includes(chatId)) {
+  if (
+    isGroupChat &&
+    allowedGroups.length > 0 &&
+    !allowedGroups.includes(chatId)
+  ) {
     console.log(`❌ Message from unauthorized group ${chatId}`);
     return;
   }
@@ -36,9 +51,9 @@ export class TeleGitBot {
       ctx.reply(
         '📋 How to use TeleGit:\n\n' +
           "1. Send any message with an idea, bug report, or task. I'll analyze it and create a GitHub issue.\n" +
-          "2. I can update existing GitHub issues. Reply to a message used to create the issue and request changes.\n" +
-          "3. You may reply to the message used to create the issue and ask for its status.\n" +
-          "4. Generic analytics: query for how many open issues there are, how many are assigned to you, etc.\n\n" +
+          '2. I can update existing GitHub issues. Reply to a message used to create the issue and request changes.\n' +
+          '3. You may reply to the message used to create the issue and ask for its status.\n' +
+          '4. Generic analytics: query for how many open issues there are, how many are assigned to you, etc.\n\n' +
           'Status reactions:\n' +
           '🤔 Processing...\n' +
           '👾 Bug recorded\n' +
@@ -49,6 +64,7 @@ export class TeleGitBot {
       );
     });
 
+    this.bot.use(skipBotMessages);
     this.bot.use(checkAllowedSender);
     this.bot.on('message', messageHandler);
   }
