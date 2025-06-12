@@ -2,18 +2,20 @@ import { processMessage } from '../services/llmService.js';
 import { uploadTelegramPhotoToS3 } from '../services/s3Service.js';
 
 /**
- * 
- * @param {import('telegraf').Context} ctx 
+ *
+ * @param {import('telegraf').Context} ctx
  */
 export async function messageHandler(ctx) {
   const message = ctx.message;
   const userId = ctx.from.id;
   // const chatId = ctx.chat.id;
-  console.log(`📨 Message from user ${userId}: ${message.text || message.caption ||'[No Text]'}`);
+  console.log(
+    `📨 Message from user ${userId}: ${message.text || message.caption || '[No Text]'}`
+  );
   try {
     // React with processing emoji
     await ctx.react('🤔');
-    
+
     // Handle photo message
     let photoUrls = [];
     if (message.photo) {
@@ -39,47 +41,12 @@ export async function messageHandler(ctx) {
         replyToMessageText: message.reply_to_message.text,
       }),
     });
-    console.error('🤖 Agent response:', result);
-    // Submit a reaction
-    // if (result.success) {
-    //   console.error('✅ Successfully processed message:', result.message);
-    //   if (result.modified) {
-    //     if (result.classification?.action === 'create') {
-    //       const emoji = getReactionEmoji(result.classification.type);
-    //       await ctx.react(emoji);
-    //     } else {
-    //       await ctx.react('👌');
-    //     }
-    //   } else {
-    //     await ctx.react('');
-    //   }
-    //   await ctx.reply(result.message);
-    // } else {
-    //   console.error('❌ Error processing message:', result.message);
-    //   await ctx.react('😭');
-    // }
+    console.log('🤖 Agent response:', result);
   } catch (error) {
     console.error('❌ Error processing message:', error);
     await ctx.react('😭');
     await ctx.reply(
       'Sorry, I encountered an error processing your message. Please try again.'
     );
-  }
-}
-
-// Supported: 
-// "👍" | "👎" | "❤" | "🔥" | "🥰" | "👏" | "😁" | "🤔" | "🤯" | "😱" | "🤬" | "😢" | "🎉" | "🤩" | "🤮" | "💩" | "🙏" | "👌" | "🕊" | "🤡" | "🥱" | "🥴" | "😍" | "🐳" | "❤‍🔥" | "🌚" | "🌭" | "💯" | "🤣" | "⚡" | "🍌" | "🏆" | "💔" | "🤨" | "😐" | "🍓" | "🍾" | "💋" | "🖕" | "😈" | "😴" | "😭" | "🤓" | "👻" | "👨‍💻" | "👀" | "🎃" | "🙈" | "😇" | "😨" | "🤝" | "✍" | "🤗" | "🫡" | "🎅" | "🎄" | "☃" | "💅" | "🤪" | "🗿" | "🆒" | "💘" | "🙉" | "🦄" | "😘" | "💊" | "🙊" | "😎" | "👾" | "🤷‍♂" | "🤷" | "🤷‍♀" | "😡"
-
-function getReactionEmoji(type) {
-  switch (type) {
-    case 'bug':
-      return '👾';
-    case 'task':
-      return '🫡';
-    case 'idea':
-      return '🦄';
-    default:
-      // Fallback to a neutral emoji
-      return '👌';
   }
 }
