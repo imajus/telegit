@@ -19,9 +19,6 @@ export const sanitizeTool = tool({
       },
       allowedSchemes: ['http', 'https', 'mailto', 'tel'],
     });
-    return {
-      original: message,
-      sanitized: sanitized,
-    };
+    return sanitized;
   },
 });
