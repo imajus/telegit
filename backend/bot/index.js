@@ -1,6 +1,9 @@
 import { Telegraf } from 'telegraf';
 import { messageHandler } from '../handlers/messageHandler.js';
 
+const ALLOWED_TELEGRAM_GROUPS = process.env.ALLOWED_TELEGRAM_GROUPS?.trim();
+const ALLOWED_TELEGRAM_USERS = process.env.ALLOWED_TELEGRAM_USERS?.trim();
+
 function skipBotMessages(ctx, next) {
   if (ctx.from?.is_bot) {
     console.log('🤖 Skipping message from bot');
@@ -10,25 +13,26 @@ function skipBotMessages(ctx, next) {
 }
 
 function checkAllowedSender(ctx, next) {
-  const allowedGroups =
-    process.env.ALLOWED_TELEGRAM_GROUPS?.split(',').map((id) => id.trim()) ||
-    [];
-  const allowedUsers =
-    process.env.ALLOWED_TELEGRAM_USERS?.split(',').map((id) => id.trim()) || [];
-  const chatId = ctx.chat.id.toString();
-  const userId = ctx.from.id.toString();
-  const isGroupChat = ['group', 'supergroup'].includes(ctx.chat.type);
-  if (
-    isGroupChat &&
-    allowedGroups.length > 0 &&
-    !allowedGroups.includes(chatId)
-  ) {
-    console.log(`❌ Message from unauthorized group ${chatId}`);
-    return;
+  if (ALLOWED_TELEGRAM_GROUPS) {
+    const chatId = ctx.chat.id.toString();
+    const allowedGroups = ALLOWED_TELEGRAM_GROUPS.split(',').map((id) =>
+      id.trim()
+    );
+    const isGroupChat = ['group', 'supergroup'].includes(ctx.chat.type);
+    if (isGroupChat && !allowedGroups.includes(chatId)) {
+      console.log(`❌ Message from unauthorized group ${chatId}`);
+      return;
+    }
   }
-  if (allowedUsers.length > 0 && !allowedUsers.includes(userId)) {
-    console.log(`❌ Message from unauthorized user ${userId}`);
-    return;
+  if (ALLOWED_TELEGRAM_USERS) {
+    const allowedUsers = ALLOWED_TELEGRAM_USERS.split(',').map((id) =>
+      id.trim()
+    );
+    const userId = ctx.from.id.toString();
+    if (!allowedUsers.includes(userId)) {
+      console.log(`❌ Message from unauthorized user ${userId}`);
+      return;
+    }
   }
   return next();
 }
