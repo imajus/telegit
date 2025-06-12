@@ -93,23 +93,32 @@ export class TeleGitBot {
     this.bot.start((ctx) => {
       ctx.reply(
         '🤖 Welcome to TeleGit! I help turn your messages into GitHub issues.\n\n' +
-          "Just send me your ideas, bugs, or tasks and I'll process them with AI magic! ✨"
+          "Just send me your ideas, bugs, or tasks and I'll process them with AI magic! ✨\n\n" +
+          'Type /help for detailed instructions on how to use me.'
       );
     });
 
     this.bot.help((ctx) => {
       ctx.reply(
         '📋 How to use TeleGit:\n\n' +
-          "1. Send any message with an idea, bug report, or task. I'll analyze it and create a GitHub issue.\n" +
-          '2. I can update existing GitHub issues. Reply to a message used to create the issue and request changes.\n' +
-          '3. You may reply to the message used to create the issue and ask for its status.\n' +
-          '4. Generic analytics: query for how many open issues there are, how many are assigned to you, etc.\n\n' +
+          "I'll process your messages and create GitHub issues when you:\n" +
+          '• Send me a private message\n' +
+          '• Mention me (@' +
+          ctx.botInfo?.username +
+          ') in a group\n' +
+          '• Use hashtags: #idea, #bug, #todo, #plan, or #act in a group\n' +
+          '• Reply to any of my messages in a group\n\n' +
+          'What I can do:\n' +
+          '1. Analyze your messages and create GitHub issues\n' +
+          '2. Update existing issues when you reply to my messages\n' +
+          '3. Provide status updates on existing issues\n' +
+          '4. Answer analytics queries about your GitHub repository\n\n' +
           'Status reactions:\n' +
           '🤔 Processing...\n' +
           '👾 Bug recorded\n' +
           '🫡 Task issued\n' +
           '🦄 Idea logged\n' +
-          '👌 No action needed\n' +
+          '👌 Done something else\n' +
           '😭 Something went wrong...'
       );
     });
