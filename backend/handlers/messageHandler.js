@@ -12,6 +12,7 @@ export async function messageHandler(ctx) {
     `📨 Message from user ${userId}: ${message.text || message.caption || '[No Text]'}`
   );
   try {
+    await ctx.react('🤔');
     //TODO: Upload photo only when necessary via custom tool
     let photoUrls = [];
     if (message.photo) {

@@ -39,12 +39,7 @@ For each message:
       - Place images after the main description text
       - Add an "Screenshots" section if there are multiple images
 
-2. If classification resolved some action then react to the original message with a processing emoji using set_message_reaction tool:
-  - For query action react with "🔍"
-  - For other action react with "🤔"
-  - If no action is resolved, do not react and stop processing
-
-3. Call the GitHub Server tools for:
+2. Call the GitHub Server tools for:
   - Searching current issues to prevent duplicates
     - Include "repo:{{githubRepositoryOwner}}/{{githubRepositoryName}}" modifier in the search query
   - Performing the desired action: create/update
@@ -53,4 +48,4 @@ For each message:
     - Repository owner: {{githubRepositoryOwner}}
     - Repository name: {{githubRepositoryName}}
 
-4. Pass control to the Telegram Responder handoff for futher processing.
+3. Pass control to the Telegram Responder handoff for futher processing.
