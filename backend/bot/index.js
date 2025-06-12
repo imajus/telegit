@@ -47,6 +47,42 @@ function skipMessagesWithoutTextOrPhoto(ctx, next) {
   return next();
 }
 
+function filterRelevantMessages(ctx, next) {
+  const isPrivateChat = ctx.chat.type === 'private';
+  if (isPrivateChat) {
+    console.log('💬 Private message - processing');
+    return next();
+  }
+  const isGroupChat = ['group', 'supergroup'].includes(ctx.chat.type);
+  if (isGroupChat) {
+    const messageText = ctx.message?.text || '';
+    const botUsername = ctx.botInfo?.username;
+    const isBotMentioned =
+      ctx.message?.entities?.some(
+        (entity) =>
+          entity.type === 'mention' &&
+          messageText.substring(
+            entity.offset,
+            entity.offset + entity.length
+          ) === `@${botUsername}`
+      ) || messageText.includes(`@${botUsername}`);
+    const relevantHashtags = ['#idea', '#bug', '#todo', '#plan', '#act'];
+    const hasRelevantHashtag = relevantHashtags.some((hashtag) =>
+      messageText.toLowerCase().includes(hashtag)
+    );
+    const isReplyToBotMessage =
+      ctx.message?.reply_to_message?.from?.id === ctx.botInfo?.id;
+    if (isBotMentioned || hasRelevantHashtag || isReplyToBotMessage) {
+      console.log('🎯 Relevant group message - processing');
+      return next();
+    }
+    console.log('🔇 Ignoring irrelevant group message');
+    return;
+  }
+  console.log('🔇 Ignoring message from unknown chat type');
+  return;
+}
+
 export class TeleGitBot {
   constructor(telegramBotToken) {
     this.bot = new Telegraf(telegramBotToken);
@@ -81,6 +117,7 @@ export class TeleGitBot {
     this.bot.use(skipBotMessages);
     this.bot.use(checkAllowedSender);
     this.bot.use(skipMessagesWithoutTextOrPhoto);
+    this.bot.use(filterRelevantMessages);
     this.bot.on('message', messageHandler);
   }
 
