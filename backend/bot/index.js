@@ -55,7 +55,7 @@ function filterRelevantMessages(ctx, next) {
   }
   const isGroupChat = ['group', 'supergroup'].includes(ctx.chat.type);
   if (isGroupChat) {
-    const messageText = ctx.message?.text || '';
+    const messageText = ctx.message?.text || ctx.message?.caption || '';
     const botUsername = ctx.botInfo?.username;
     const isBotMentioned =
       ctx.message?.entities?.some(
