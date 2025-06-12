@@ -37,6 +37,16 @@ function checkAllowedSender(ctx, next) {
   return next();
 }
 
+function skipMessagesWithoutTextOrPhoto(ctx, next) {
+  const hasText = ctx.message?.text;
+  const hasPhoto = ctx.message?.photo;
+  if (!hasText && !hasPhoto) {
+    console.log('📎 Skipping message without text or photo');
+    return;
+  }
+  return next();
+}
+
 export class TeleGitBot {
   constructor(telegramBotToken) {
     this.bot = new Telegraf(telegramBotToken);
@@ -70,6 +80,7 @@ export class TeleGitBot {
 
     this.bot.use(skipBotMessages);
     this.bot.use(checkAllowedSender);
+    this.bot.use(skipMessagesWithoutTextOrPhoto);
     this.bot.on('message', messageHandler);
   }
 
