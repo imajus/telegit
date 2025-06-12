@@ -20,34 +20,37 @@ For each message:
 1. Use the classify_message tool to build a structure:
   - GitHub issues action (query/create/update/close)
   - For query action:
+    - Distil search query as title attribute
     - Include "is:issue" modifier in the search query
     - Include "repo:{{githubRepositoryOwner}}/{{githubRepositoryName}}" modifier in the search query
     - If you need to include only open issues, add "is:open" modifier
     - If you need to include only closed issues, add "is:closed" modifier
+    - Leave all other attributes empty
   - For create/update actions only:
-    - Select category (bug/task/idea/other)
+    - Select category (bug/task/idea/other):
+      - bug: Error reports, problems, something not working
+      - task: Action items, improvements, things to do
+      - idea: Feature requests, suggestions, brainstorming
+      - other: Anything else
     - Make concise title (under 80 characters)
     - Make clear, actionable description
     - Select relevant labels, one or many of: "bug", "documentation", "idea", "enhancement", "good first issue", "help wanted", "invalid", "question", "wontfix"
     - If photoUrls array is present, include the images in the issue body using markdown image syntax: ![description](url)
       - Place images after the main description text
       - Add an "Screenshots" section if there are multiple images
-1. Call the GitHub Server tools for:
+
+2. If classification resolved some action then react to the original message with a processing emoji using set_message_reaction tool:
+  - For query action react with "🔍"
+  - For other action react with "🤔"
+  - If no action is resolved, do not react and stop processing
+
+3. Call the GitHub Server tools for:
   - Searching current issues to prevent duplicates
     - Include "repo:{{githubRepositoryOwner}}/{{githubRepositoryName}}" modifier in the search query
   - Performing the desired action: create/update
   - If close action is requested, call update_issue tool with the state argument set to "closed"
+  - Pass the following data when required by the tool:
+    - Repository owner: {{githubRepositoryOwner}}
+    - Repository name: {{githubRepositoryName}}
 
-Classification guidelines:
-
-- bug: Error reports, problems, something not working
-- task: Action items, improvements, things to do
-- idea: Feature requests, suggestions, brainstorming
-- other: Anything else
-
-For the GitHub Server tool calls, use the following data when needed:
-
-- Repository owner: {{githubRepositoryOwner}}
-- Repository name: {{githubRepositoryName}}
-
-Pass control to the Telegram Responder handoff for futher processing.
+4. Pass control to the Telegram Responder handoff for futher processing.

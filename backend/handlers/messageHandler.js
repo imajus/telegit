@@ -8,15 +8,11 @@ import { uploadTelegramPhotoToS3 } from '../services/s3Service.js';
 export async function messageHandler(ctx) {
   const message = ctx.message;
   const userId = ctx.from.id;
-  // const chatId = ctx.chat.id;
   console.log(
     `📨 Message from user ${userId}: ${message.text || message.caption || '[No Text]'}`
   );
   try {
-    // React with processing emoji
-    await ctx.react('🤔');
-
-    // Handle photo message
+    //TODO: Upload photo only when necessary via custom tool
     let photoUrls = [];
     if (message.photo) {
       // Get the highest quality photo (last in the array)
@@ -26,7 +22,6 @@ export async function messageHandler(ctx) {
       const s3Url = await uploadTelegramPhotoToS3(fileUrl);
       photoUrls.push(s3Url);
     }
-
     // Process the message using LLM
     const result = await processMessage({
       messageId: message.message_id,
