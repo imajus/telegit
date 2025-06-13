@@ -4,7 +4,8 @@ A minimalist AI-powered Telegram bot that turns simple chat messages into action
 
 ## Resources
 
-- [Presentation](./presentation.pdf)
+- [Interactive](https://gamma.app/docs/TeleGit-AI-Powered-Project-Management-in-Telegram-i7hfn8yexjw8zhq) or [PDF](https://disk.yandex.ru/i/K6cxHc_LbqZP8Q) presentation
+- [Demo video](https://disk.yandex.ru/i/TDxsHprmG1yQtQ)
 - [Demo repository](https://github.com/BruiseBane/demo/issues)
 - [Demo Telegram bot](https://t.me/my_awesome_chat_gpt_bot)
 - [Demo Telegram group](https://t.me/+YrcxXf5it1ZkYWMy)
@@ -13,44 +14,52 @@ A minimalist AI-powered Telegram bot that turns simple chat messages into action
 
 The project was created from scratch.
 
+- Initialized as empty JavaScript project
+- Integrated OpenAI Agent SDK
+- Integrated GitHub MCP server
+- [Forked](https://github.com/imajus/telegram-bot-mcp-server) the Telegram Bot MCP server and changed it to fit the project needs
+- Integrated Handlebars for better LLM prompts management
+
 ## Architecture
 
 ```mermaid
 flowchart TD
-  subgraph Chat
-    A[User in Telegram Chat] --> B(Telegram Bot Backend)
+  A[User in Telegram Chat] -->|Messages| B(Telegram Bot Backend)
+  subgraph Backend
+    B --> G[OpenAI Agent SDK]
+    G --> D[GitHub MCP Server]
+    G --> H[Telegram Bot MCP Server]
   end
-  B --> C[LLM API<br/>intent extraction]
-  B --> D[MCP Server]
-  D --> E[GitHub Issues]
-  B --> F[AWS S3<br/>Storage]
-  B <-->|Feedback via reactions| A
+  G <--> |Inference| C[OpenAI API]
+  H --> |Replies and responses| A
+  D --> E[GitHub API]
+  G --> F[AWS S3<br/>Storage]
+  E --> F
+  B --> |Status updates via reactions| A
 ```
 
-- **LLM API:** Handles all messaging/NLP/categorization
-- **MCP Server:** Handles all communication with GitHub Issues
-- **AWS S3:** Optional storage for message history and attachments
+- **OpenAI API:** Handles all messaging/categorization/actioning
+- **GitHub MCP Server:** Handles all communication with GitHub Issues
+- **Telegram Bot MCP Server:** Handles progress updates as the AI Agent progresses
+- **AWS S3:** Optional storage for image attachments
 
 ## Features
 
 - **Chat-first workflow:** Use Telegram group chat as the single entry point for all tasks, ideas, and bug reports.
 - **LLM-powered intent extraction:** Any message (with or without hashtags) is analyzed to determine intent and category.
 - **Automated GitHub sync:** Manages GitHub issues in your configured repository using GitHub MCP server.
-- **User feedback loop:** User approves or rejects AI agent actions via Telegram message reactions; issues are submitted accordingly.
 - **AWS S3 Integration:** Optional storage for message history and attachments.
 
 ## How It Works
 
-1. Invite the bot to the project group in Telegram and make it an administrator.
-1. Write a message in your Telegram team chat mentioning the bot or including an #idea, #bug, #task or #act hashtag.
-1. Bot parses and classifies it using an LLM API call (e.g., OpenAI).
+1. Write a message in Telegram group chat mentioning the bot or including an #idea, #bug, #task or #act hashtag.
+1. Bot parses and classifies it using an LLM API call.
 1. Bot posts the result as a new issue in your GitHub repo (via MCP).
 1. Bot indicates the status of his action as a reaction on your message:
-   - 🤔: Processing
+   - 👀: Processing
    - 👾: Bug recorded
    - 🫡: Task issued
    - 🦄: Idea logged
-1. Hashtags are complimentary: LLM handles intent detection from free-form text.
 
 ### Extra capabilities
 
@@ -154,12 +163,11 @@ Optional environment variables:
 
 ## Roadmap
 
-- [ ] Support for additional PM tools (GitHub Projects, Trello, Notion, Asana) via MCP
 - [ ] Multi-repo and multi-label mapping
-- [ ] Advanced feedback and auto-summarization
-- [ ] User/role-specific filtering and notifications
-- [ ] Daily/weekly/monthly performance analytics report
 - [ ] Enhanced S3 integration with various file attachment types
+- [ ] Launch TeleGit as a scalable Software-as-a-Service offering
+- [ ] Support for additional PM tools (GitHub Projects, Trello, Notion, Asana) via MCP
+- [ ] Introduce custom workflows, advanced analytics, and intelligent summaries
 
 ## License
 
