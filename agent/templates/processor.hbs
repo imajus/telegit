@@ -26,9 +26,9 @@ For each message:
     - Call the extract_photo tool to get an image URL, and if it returns an URL, add it to the issue body using markdown image syntax: ![description](url)
 
 2. React to user message with a processing emoji using telegram_responder tool:
-  - For query action react with "🔍"
-  - For other action react with "🤔"
-  - If no action is resolved, do not react and stop processing
+  - Skip this step for query action
+  - If no action is resolved from the previous step, stop here and do not proceed to the next step
+  - For other actions react with "🤔"
 
 3. Call the GitHub Server tools for:
   - Searching current issues to prevent duplicates

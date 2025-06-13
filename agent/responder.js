@@ -15,6 +15,9 @@ export async function getTelegramAgent() {
         }),
       tools: [sanitizeTool],
       mcpServers: [await getTelegramServer()],
+      modelSettings: {
+        toolChoice: 'required',
+      },
     });
   }
   return instance;
