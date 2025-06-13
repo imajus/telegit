@@ -21,11 +21,9 @@ For each message:
       - idea: Feature requests, suggestions, brainstorming
       - other: Anything else
     - Make concise title (under 80 characters)
-    - Make clear, actionable description
+    - Make clear, actionable description and use it as a body of the issue (use markdown formatting)
     - Select relevant labels, one or many of: "bug", "documentation", "idea", "enhancement", "good first issue", "help wanted", "invalid", "question", "wontfix"
-    - If photoUrls array is present, include the images in the issue body using markdown image syntax: ![description](url)
-      - Place images after the main description text
-      - Add an "Screenshots" section if there are multiple images
+    - Call the extract_photo tool to get an image URL, and if it returns an URL, add it to the issue body using markdown image syntax: ![description](url)
 
 2. React to user message with a processing emoji using telegram_responder tool:
   - For query action react with "🔍"

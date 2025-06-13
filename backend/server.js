@@ -30,7 +30,7 @@ async function main() {
   setDefaultOpenAIKey(process.env.OPENAI_API_KEY);
 
   try {
-    const bot = new TeleGitBot(process.env.TELEGRAM_BOT_API_TOKEN);
+    const bot = TeleGitBot.getInstance();
     await bot.launch();
     // Graceful shutdown
     process.once('SIGINT', () => bot.stop('SIGINT'));

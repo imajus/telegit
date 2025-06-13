@@ -7,7 +7,7 @@ import { getProcessorAgent } from '../../agent/agent.js';
  * @prop {string} context.fromId
  * @prop {string} context.chatId
  * @prop {string} context.chatType
- * @prop {string[]} [context.photoUrls]
+ * @prop {string} [context.photoId]
  * @prop {object} [context.replyTo]
  * @prop {string} context.replyTo.messageId
  * @prop {string} context.replyTo.fromId

@@ -20,10 +20,8 @@ export async function uploadTelegramPhotoToS3(fileUrl) {
     // Download the file from Telegram
     const response = await fetch(fileUrl);
     const buffer = await response.buffer();
-    
     // Generate a unique filename
     const filename = `telegram-photos/${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`;
-    
     // Upload to S3
     const command = new PutObjectCommand({
       Bucket: process.env.S3_BUCKET,
@@ -31,9 +29,9 @@ export async function uploadTelegramPhotoToS3(fileUrl) {
       Body: buffer,
       ContentType: 'image/jpeg',
     });
-    
+
     await s3Client.send(command);
-    
+
     // Generate a public URL
     if (process.env.S3_PUBLIC_ENDPOINT) {
       return `${process.env.S3_PUBLIC_ENDPOINT}/${filename}`;
@@ -46,4 +44,4 @@ export async function uploadTelegramPhotoToS3(fileUrl) {
     console.error('Error uploading photo to S3:', error);
     throw error;
   }
-} 
+}

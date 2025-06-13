@@ -1,40 +1,31 @@
 import { Agent /* , handoff */ } from '@openai/agents';
 import { classifyTool } from './tools/classify.js';
+import { extractPhotoTool } from './tools/photo.js';
 import { getGitHubServer } from './mcps/github.js';
 import { getAgentPrompt } from './templates/index.js';
 import { getTelegramAgent } from './responder.js';
-import { z } from 'zod';
 
 let instance = null;
 
 export async function getProcessorAgent() {
   if (!instance) {
-    const instructions = await getAgentPrompt('processor', {
-      githubRepositoryOwner: process.env.GITHUB_REPOSITORY_OWNER,
-      githubRepositoryName: process.env.GITHUB_REPOSITORY_NAME,
-    });
     instance = new Agent({
       name: 'Telegram Message Processor',
-      instructions,
+      instructions: async ({ context }) =>
+        getAgentPrompt('processor', {
+          githubRepositoryOwner: process.env.GITHUB_REPOSITORY_OWNER,
+          githubRepositoryName: process.env.GITHUB_REPOSITORY_NAME,
+          photoId: context.photoId ?? 'N/A',
+        }),
       tools: [
         classifyTool,
+        extractPhotoTool,
         (await getTelegramAgent()).asTool({
           toolName: 'telegram_responder',
           toolDescription: 'Respond or react to the user messages in Telegram.',
         }),
       ],
       mcpServers: [await getGitHubServer()],
-      // handoffs: [
-      //   handoff(await getTelegramAgent(), {
-      //     onHandoff: () => {}, //XXX: Why this is enforced?
-      //     inputType: z.object({
-      //       messageId: z.number(),
-      //       chatId: z.number(),
-      //       chatType: z.string(),
-      //       response: z.string(),
-      //     }),
-      //   }),
-      // ],
     });
   }
   return instance;

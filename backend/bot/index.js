@@ -84,9 +84,18 @@ function filterRelevantMessages(ctx, next) {
 }
 
 export class TeleGitBot {
+  static #instance = null;
+
   constructor(telegramBotToken) {
     this.bot = new Telegraf(telegramBotToken);
     this.setupHandlers();
+  }
+
+  static getInstance() {
+    if (!TeleGitBot.#instance) {
+      TeleGitBot.#instance = new TeleGitBot(process.env.TELEGRAM_BOT_API_TOKEN);
+    }
+    return TeleGitBot.#instance;
   }
 
   setupHandlers() {
@@ -143,5 +152,10 @@ export class TeleGitBot {
   stop(signal) {
     console.log(`🛑 Stopping bot on ${signal}`);
     this.bot.stop(signal);
+  }
+
+  async getFilePath(fileId) {
+    const file = await this.bot.telegram.getFile(fileId);
+    return file.file_path;
   }
 }
