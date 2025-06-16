@@ -6,6 +6,7 @@ import { getResponderAgent } from './responder.js';
 import { TeleGitBot } from '../backend/bot/index.js';
 import { uploadTelegramPhotoToS3 } from '../backend/services/s3Service.js';
 
+/** @type {Agent} */
 let instance = null;
 
 function getBestImage(message) {
@@ -44,7 +45,7 @@ export async function getProcessorAgent() {
       tools: [
         classifyTool,
         (await getResponderAgent()).asTool({
-          toolName: 'telegram_responder',
+          toolName: 'respond_to_message',
           toolDescription: 'Respond to messages in Telegram.',
         }),
       ],

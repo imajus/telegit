@@ -12,7 +12,7 @@ A minimalist AI-powered Telegram bot that turns simple chat messages into action
 
 ## History
 
-The project was created from scratch.
+The project was created from scratch:
 
 - Initialized as empty JavaScript project
 - Integrated OpenAI Agent SDK
@@ -20,35 +20,37 @@ The project was created from scratch.
 - [Forked](https://github.com/imajus/telegram-bot-mcp-server) the Telegram Bot MCP server and changed it to fit the project needs
 - Integrated Handlebars for better LLM prompts management
 
+16\.06 update:
+
+- Introduced automated evaluations support
+- Dropped Telegram Bot MCP integration in favour of custom tool
+
 ## Architecture
 
 ```mermaid
 flowchart TD
   A[User in Telegram Chat] -->|Messages| B(Telegram Bot Backend)
   subgraph Backend
-    B --> G[OpenAI Agent SDK]
+    B <--> G[OpenAI Agent SDK]
     G --> D[GitHub MCP Server]
-    G --> H[Telegram Bot MCP Server]
   end
   G <--> |Inference| C[OpenAI API]
-  H --> |Replies and responses| A
+  B --> |Replies and reactions| A
   D --> E[GitHub API]
-  G --> F[AWS S3<br/>Storage]
-  E --> F
-  B --> |Status updates via reactions| A
+  G --> |Upload attachments| F[AWS S3<br/>Storage]
 ```
 
 - **OpenAI API:** Handles all messaging/categorization/actioning
 - **GitHub MCP Server:** Handles all communication with GitHub Issues
-- **Telegram Bot MCP Server:** Handles progress updates as the AI Agent progresses
+- **Telegram Bot Backend:** Handles progress updates as the AI Agent progresses
 - **AWS S3:** Optional storage for image attachments
 
 ## Features
 
 - **Chat-first workflow:** Use Telegram group chat as the single entry point for all tasks, ideas, and bug reports.
-- **LLM-powered intent extraction:** Any message (with or without hashtags) is analyzed to determine intent and category.
+- **LLM-powered intent extraction:** A message content is analyzed to determine intent and category.
 - **Automated GitHub sync:** Manages GitHub issues in your configured repository using GitHub MCP server.
-- **AWS S3 Integration:** Optional storage for message history and attachments.
+- **AWS S3 Integration:** Optional proxy for message image attachments.
 
 ## How It Works
 
@@ -96,6 +98,7 @@ TeleGit also can:
 - Available scripts:
   - `npm start` - Run in production mode
   - `npm run dev` - Run in development mode with hot reload
+  - `npm test` - Run evaluations using Vitest
   - `npm run lint` - Run ESLint
   - `npm run lint:fix` - Fix ESLint issues
   - `npm run format` - Format code with Prettier
@@ -124,6 +127,21 @@ Then start the backend in development mode:
 # Development mode with hot reload
 npm run dev
 ```
+
+### Running Evaluations
+
+The project includes evaluation capabilities to test the AI agent's performance:
+
+```bash
+# Run all evaluations
+npm test
+```
+
+The evaluation system uses Vitest and Sinon to:
+
+- Create fake GitHub issues and Telegram bots
+- Test the agent's ability to process messages and create appropriate GitHub issues
+- Validate response accuracy and categorization
 
 ### Communicate With Telegram Bot
 
