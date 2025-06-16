@@ -9,7 +9,9 @@ export const respondTool = tool({
   }),
   execute: async (input, { context }) => {
     const { bot } = context;
-    await bot.reply(input);
+    await bot.reply(input.message, {
+      parse_mode: 'HTML',
+    });
     return 'Message sent';
   },
 });
