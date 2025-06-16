@@ -14,7 +14,7 @@ export async function messageHandler(ctx) {
     const result = await processMessage(text || '', {
       bot: ctx,
     });
-    console.log('🤖 Agent response:', result);
+    console.log('🤖 Agent response:', result.finalOutput);
   } catch (error) {
     console.error('❌ Error processing message:', error);
     await ctx.react('😭');
