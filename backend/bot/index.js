@@ -102,6 +102,11 @@ export class TeleGitBot {
     this.bot.start((ctx) => {
       ctx.reply(
         '🤖 Welcome to TeleGit! I help turn your messages into GitHub issues.\n\n' +
+          'What I can do:\n' +
+          '1. Analyze your messages and create GitHub issues\n' +
+          '2. Update existing issues when you reply to my messages\n' +
+          '3. Provide status updates on existing issues\n' +
+          '4. Answer analytics queries about your GitHub repository\n\n' +
           "Just send me your ideas, bugs, or tasks and I'll process them with AI magic! ✨\n\n" +
           'Type /help for detailed instructions on how to use me.'
       );
@@ -117,18 +122,12 @@ export class TeleGitBot {
           ') in a group\n' +
           '• Use hashtags: #idea, #bug, #todo, #plan, or #act in a group\n' +
           '• Reply to any of my messages in a group\n\n' +
-          'What I can do:\n' +
-          '1. Analyze your messages and create GitHub issues\n' +
-          '2. Update existing issues when you reply to my messages\n' +
-          '3. Provide status updates on existing issues\n' +
-          '4. Answer analytics queries about your GitHub repository\n\n' +
           'Status reactions:\n' +
-          '🤔 Processing...\n' +
+          '👀 Processing...\n' +
           '👾 Bug recorded\n' +
           '🫡 Task issued\n' +
           '🦄 Idea logged\n' +
-          '👌 Done something else\n' +
-          '😭 Something went wrong...'
+          '👌 Done something else'
       );
     });
 
